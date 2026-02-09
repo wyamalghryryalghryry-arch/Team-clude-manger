@@ -59,12 +59,41 @@ async function deleteTask(id) {
   if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
         await db.collection("tasks").doc(id).delete();
     }
-  // إضافة زر التعديل برمجياً بواسطة فلة الشتاء
-const editBtn = document.createElement('button');
-editBtn.innerText = 'تعديل';
-editBtn.className = 'edit-btn'; // لتنسيقه لاحقاً
-editBtn.onclick = () => editTask(doc.id); // استدعاء وظيفة التعديل
-li.appendChild(editBtn); // إضافة الزر للعنصر
+// دالة التعديل - عمل فلة الشتاء لتصحيح الأسماء
+window.updateTask = async function() {
+    const oldTaskName = prompt("أدخل اسم المهمة الخطأ التي تريد تعديلها:");
+    const newTaskName = document.getElementById('taskInput').value; // الاسم الجديد من الخانة
+    const studentName = document.getElementById('studentInput').value; // اسم الطالب من الخانة
+
+    if (!oldTaskName || !newTaskName) {
+        alert("يرجى إدخال الاسم القديم والجديد");
+        return;
+    }
+
+    try {
+        // البحث عن المهمة في Firestore وتحديثها
+        const q = query(collection(db, "tasks"), where("task", "==", oldTaskName));
+        const querySnapshot = await getDocs(q);
+       
+        if (querySnapshot.empty) {
+            alert("لم يتم العثور على مهمة بهذا الاسم!");
+            return;
+        }
+
+        querySnapshot.forEach(async (docSnap) => {
+            const taskRef = doc(db, "tasks", docSnap.id);
+            await updateDoc(taskRef, {
+                task: newTaskName,
+                student: studentName
+            });
+        });
+
+        alert("تم تعديل الاسم بنجاح في السحابة! حدثي الصفحة.");
+    } catch (error) {
+        console.error("خطأ في التعديل: ", error);
+        alert("حدث خطأ أثناء التعديل");
+    }
+};
     
 // ميزة البحث - إضافة الزميلة الثالثة
 window.searchTasks = function() {
@@ -76,6 +105,7 @@ window.searchTasks = function() {
         item.style.display = text.includes(input) ? 'flex' : 'none';
     });
 };    
+
 
 
 
