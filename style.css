@@ -59,4 +59,15 @@ button:hover { background-color: #e65100; }
     background: #ff4444;
     padding: 5px 10px;
     font-size: 12px;
+
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    cursor: pointer;
 }
