@@ -68,7 +68,17 @@ window.editTask = function(id) {
     }
     {
 };
+// ميزة البحث - إضافة الزميلة الثالثة
+window.searchTasks = function() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let taskItems = document.querySelectorAll('.task-item'); // هذا يستهدف عناصر القائمة عندك
     
+    taskItems.forEach(item => {
+        let text = item.innerText.toLowerCase();
+        item.style.display = text.includes(input) ? 'flex' : 'none';
+    });
+};    
+
 
 
 
