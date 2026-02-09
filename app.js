@@ -59,15 +59,13 @@ async function deleteTask(id) {
   if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
         await db.collection("tasks").doc(id).delete();
     }
-       // إضافة ميزة التعديل بواسطة فلة الشتاء
-window.editTask = function(id) {
-    const newText = prompt("أدخل النص الجديد للمهمة:");
-    if (newText) {
-        alert("سيتم تحديث المهمة إلى: " + newText);
-        // هنا يتم الربط مع Firebase لتحديث البيانات سحابياً
-    }
-    {
-};
+  // إضافة زر التعديل برمجياً بواسطة فلة الشتاء
+const editBtn = document.createElement('button');
+editBtn.innerText = 'تعديل';
+editBtn.className = 'edit-btn'; // لتنسيقه لاحقاً
+editBtn.onclick = () => editTask(doc.id); // استدعاء وظيفة التعديل
+li.appendChild(editBtn); // إضافة الزر للعنصر
+    
 // ميزة البحث - إضافة الزميلة الثالثة
 window.searchTasks = function() {
     let input = document.getElementById('searchInput').value.toLowerCase();
@@ -78,6 +76,7 @@ window.searchTasks = function() {
         item.style.display = text.includes(input) ? 'flex' : 'none';
     });
 };    
+
 
 
 
