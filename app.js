@@ -89,3 +89,4 @@ async function deleteTask(id) {
         await db.collection("tasks").doc(id).delete();
     }
 }
+
