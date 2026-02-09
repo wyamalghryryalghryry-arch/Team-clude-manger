@@ -56,17 +56,19 @@ db.collection("tasks").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
 
 // 5. دالة الحذف (Delete)
 async function deleteTask(id) {
-
-    // إضافة ميزة التعديل بواسطة فلة الشتاء
+  if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
+        await db.collection("tasks").doc(id).delete();
+    }
+       // إضافة ميزة التعديل بواسطة فلة الشتاء
 window.editTask = function(id) {
     const newText = prompt("أدخل النص الجديد للمهمة:");
     if (newText) {
         alert("سيتم تحديث المهمة إلى: " + newText);
         // هنا يتم الربط مع Firebase لتحديث البيانات سحابياً
     }
+    {
 };
-    if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
-        await db.collection("tasks").doc(id).delete();
-    }
+    
 
-}
+
+
