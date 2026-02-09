@@ -1,4 +1,4 @@
-// 1. إعدادات Firebase الخاصة بك (نسختها من صورتك)
+// 1. إعدادات Firebase الخاصة بك
 const firebaseConfig = {
     apiKey: "AIzaSyAsaM2GkLFkP2fV8PG73otbb9e741A5oyg",
     authDomain: "team-cloud-manger.firebaseapp.com",
@@ -30,98 +30,62 @@ async function addTask() {
     }
 }
 
-// كود فلة الشتاء: صنع زر التعديل برمجياً بالكامل
-const editBtn = document.createElement('button');
-editBtn.innerText = 'تعديل';
-editBtn.className = 'edit-btn'; // استدعاء التنسيق من CSS
-
-// عند الضغط تظهر نافذة التأكيد (OK/Cancel) التي طلبتيها
-editBtn.onclick = async () => {
-    const confirmEdit = confirm("هل تريد تعديل هذه المهمة؟");
-    if (confirmEdit) {
-        const newValue = prompt("أدخل الاسم الجديد:", doc.data().task);
-        if (newValue && newValue !== doc.data().task) {
-            const taskRef = doc(db, "tasks", doc.id);
-            await updateDoc(taskRef, { task: newValue });
-            alert("تم التعديل بنجاح!");
-        }
-    }
-};
-
-// إضافة الزر بجانب زر الحذف في القائمة
-li.appendChild(editBtn);
-
 // 4. عرض البيانات وتحديثها تلقائياً (Read)
 db.collection("tasks").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
     const taskList = document.getElementById('taskList');
-    taskList.innerHTML = ''; // مسح القائمة الحالية لإعادة الرسم
+    taskList.innerHTML = '';
 
     snapshot.forEach((doc) => {
         const data = doc.data();
         const li = document.createElement('div');
         li.className = 'task-item';
+       
+        // بناء شكل السطر مع زر الحذف الأساسي
         li.innerHTML = `
             <span><strong>${data.task}</strong> (بواسطة: ${data.student})</span>
-            <div>
+            <div class="buttons-container" style="display: inline-block;">
                 <button class="delete-btn" onclick="deleteTask('${doc.id}')">حذف</button>
             </div>
         `;
+       
+        // --- إضافة زر التعديل برمجياً بواسطة فلة الشتاء ---
+        const editBtn = document.createElement('button');
+        editBtn.innerText = 'تعديل';
+        editBtn.style.backgroundColor = '#f39c12'; // برتقالي
+        editBtn.style.color = 'white';
+        editBtn.style.border = 'none';
+        editBtn.style.marginRight = '5px';
+        editBtn.style.padding = '2px 8px';
+        editBtn.style.borderRadius = '4px';
+        editBtn.style.cursor = 'pointer';
+
+        // وظيفة التعديل مع رسالة التأكيد
+        editBtn.onclick = async () => {
+            const confirmEdit = confirm("هل تريد تعديل هذه المهمة؟");
+            if (confirmEdit) {
+                const newValue = prompt("أدخل الاسم الجديد للمهمة:", data.task);
+                if (newValue && newValue !== data.task) {
+                    await db.collection("tasks").doc(doc.id).update({
+                        task: newValue
+                    });
+                    alert("تم التعديل بنجاح!");
+                }
+            }
+        };
+
+        // إضافة زر التعديل بجانب زر الحذف داخل الـ div
+        li.querySelector('.buttons-container').appendChild(editBtn);
         taskList.appendChild(li);
     });
-   
-    // إخفاء نص التحميل إذا وجدت بيانات
+  
     if (snapshot.size > 0) {
         document.getElementById('loadingText')?.remove();
     }
 });
 
-// كود فلة الشتاء: صنع زر التعديل برمجياً بالكامل
-const editBtn = document.createElement('button');
-editBtn.innerText = 'تعديل';
-editBtn.className = 'edit-btn'; // استدعاء التنسيق من CSS
-
-// عند الضغط تظهر نافذة التأكيد (OK/Cancel) التي طلبتيها
-editBtn.onclick = async () => {
-    const confirmEdit = confirm("هل تريد تعديل هذه المهمة؟");
-    if (confirmEdit) {
-        const newValue = prompt("أدخل الاسم الجديد:", doc.data().task);
-        if (newValue && newValue !== doc.data().task) {
-            const taskRef = doc(db, "tasks", doc.id);
-            await updateDoc(taskRef, { task: newValue });
-            alert("تم التعديل بنجاح!");
-        }
-    }
-};
-
-// إضافة الزر بجانب زر الحذف في القائمة
-li.appendChild(editBtn);
-
 // 5. دالة الحذف (Delete)
 async function deleteTask(id) {
-  if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
+    if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
         await db.collection("tasks").doc(id).delete();
     }
-
-  
-// ميزة البحث - إضافة الزميلة الثالثة
-window.searchTasks = function() {
-    let input = document.getElementById('searchInput').value.toLowerCase();
-    let taskItems = document.querySelectorAll('.task-item'); // هذا يستهدف عناصر القائمة عندك
-    
-    taskItems.forEach(item => {
-        let text = item.innerText.toLowerCase();
-        item.style.display = text.includes(input) ? 'flex' : 'none';
-    });
-};    
-
-
-
-
-
-
-
-
-
-
-
-
+}
