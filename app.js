@@ -106,27 +106,27 @@ window.searchTasks = function() {
     });
 };    
 
-    // دالة التعديل بأسلوب نافذة التأكيد - عمل فلة الشتاء
-window.updateTask = async function() {
-    // 1. إظهار رسالة تأكيد مثل الحذف تماماً
-    const confirmation = confirm("هل تريد تعديل هذه المهمة من السحابة؟");
-   
-    if (confirmation) {
-        const taskName = document.getElementById('taskInput').value;
-        const studentName = document.getElementById('studentInput').value;
+// كود فلة الشتاء: صنع زر التعديل برمجياً بالكامل
+const editBtn = document.createElement('button');
+editBtn.innerText = 'تعديل';
+editBtn.className = 'edit-btn'; // استدعاء التنسيق من CSS
 
-        if (taskName === "" || studentName === "") {
-            alert("يرجى كتابة الاسم الجديد في الخانات فوق أولاً");
-            return;
+// عند الضغط تظهر نافذة التأكيد (OK/Cancel) التي طلبتيها
+editBtn.onclick = async () => {
+    const confirmEdit = confirm("هل تريد تعديل هذه المهمة؟");
+    if (confirmEdit) {
+        const newValue = prompt("أدخل الاسم الجديد:", doc.data().task);
+        if (newValue && newValue !== doc.data().task) {
+            const taskRef = doc(db, "tasks", doc.id);
+            await updateDoc(taskRef, { task: newValue });
+            alert("تم التعديل بنجاح!");
         }
-
-        // هنا تضع فلة كود التحديث الفعلي في Firebase
-        alert("تم البدء في التعديل سحابياً...");
-    } else {
-        // إذا ضغطتِ Cancel لا يحدث شيء
-        console.log("تم إلغاء التعديل");
     }
 };
+
+// إضافة الزر بجانب زر الحذف في القائمة
+li.appendChild(editBtn);
+
 
 
 
