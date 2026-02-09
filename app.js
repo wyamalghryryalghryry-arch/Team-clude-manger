@@ -88,6 +88,29 @@ async function deleteTask(id) {
     if (confirm("هل تريد حذف هذه المهمة من السحابة؟")) {
         await db.collection("tasks").doc(id).delete();
     }
+
+    // --- كود البحث المطور: يوضع في نهاية الملف ---
+window.searchTasks = function() {
+    // 1. نجلب النص الذي كتبه المستخدم في مربع البحث
+    let input = document.getElementById('searchInput').value.toLowerCase();
+   
+    // 2. نجلب كل عناصر المهام (التي لها class اسمه task-item)
+    let taskItems = document.querySelectorAll('.task-item');
+
+    taskItems.forEach(item => {
+        // 3. نقرأ النص الموجود داخل كل مهمة
+        let text = item.innerText.toLowerCase();
+       
+        // 4. إذا كان النص يحتوي على الكلمة المكتوبة، نظهر المهمة
+        if (text.includes(input)) {
+            item.style.display = "flex";
+        } else {
+            // إذا لم تكن موجودة، نخفيها تماماً
+            item.style.display = "none";
+        }
+    });
+};
 }
+
 
 
