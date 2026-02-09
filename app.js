@@ -94,6 +94,23 @@ window.updateTask = async function() {
         alert("حدث خطأ أثناء التعديل");
     }
 };
+
+    // كود فلة الشتاء: جعل المهمة قابلة للتعديل عند الضغط عليها
+const taskText = document.createElement('span');
+taskText.innerText = `${doc.data().task} (بواسطة: ${doc.data().student})`;
+taskText.style.cursor = "pointer"; // ليظهر شكل اليد عند الوقوف عليه
+
+// عند الضغط على النص المكتوب تحت
+taskText.onclick = async () => {
+    const newTaskName = prompt("تعديل اسم المهمة:", doc.data().task);
+    if (newTaskName && newTaskName !== doc.data().task) {
+        const taskRef = doc(db, "tasks", doc.id);
+        await updateDoc(taskRef, { task: newTaskName });
+        alert("تم التعديل بنجاح!");
+    }
+};
+
+li.appendChild(taskText);
     
 // ميزة البحث - إضافة الزميلة الثالثة
 window.searchTasks = function() {
@@ -105,6 +122,7 @@ window.searchTasks = function() {
         item.style.display = text.includes(input) ? 'flex' : 'none';
     });
 };    
+
 
 
 
