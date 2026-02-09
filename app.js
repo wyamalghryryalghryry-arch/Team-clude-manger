@@ -30,6 +30,27 @@ async function addTask() {
     }
 }
 
+// كود فلة الشتاء: صنع زر التعديل برمجياً بالكامل
+const editBtn = document.createElement('button');
+editBtn.innerText = 'تعديل';
+editBtn.className = 'edit-btn'; // استدعاء التنسيق من CSS
+
+// عند الضغط تظهر نافذة التأكيد (OK/Cancel) التي طلبتيها
+editBtn.onclick = async () => {
+    const confirmEdit = confirm("هل تريد تعديل هذه المهمة؟");
+    if (confirmEdit) {
+        const newValue = prompt("أدخل الاسم الجديد:", doc.data().task);
+        if (newValue && newValue !== doc.data().task) {
+            const taskRef = doc(db, "tasks", doc.id);
+            await updateDoc(taskRef, { task: newValue });
+            alert("تم التعديل بنجاح!");
+        }
+    }
+};
+
+// إضافة الزر بجانب زر الحذف في القائمة
+li.appendChild(editBtn);
+
 // 4. عرض البيانات وتحديثها تلقائياً (Read)
 db.collection("tasks").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
     const taskList = document.getElementById('taskList');
@@ -92,6 +113,7 @@ window.searchTasks = function() {
         item.style.display = text.includes(input) ? 'flex' : 'none';
     });
 };    
+
 
 
 
