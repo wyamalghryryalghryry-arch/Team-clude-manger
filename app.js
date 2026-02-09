@@ -94,24 +94,7 @@ window.updateTask = async function() {
         alert("حدث خطأ أثناء التعديل");
     }
 };
-
-    // كود فلة الشتاء: جعل المهمة قابلة للتعديل عند الضغط عليها
-const taskText = document.createElement('span');
-taskText.innerText = `${doc.data().task} (بواسطة: ${doc.data().student})`;
-taskText.style.cursor = "pointer"; // ليظهر شكل اليد عند الوقوف عليه
-
-// عند الضغط على النص المكتوب تحت
-taskText.onclick = async () => {
-    const newTaskName = prompt("تعديل اسم المهمة:", doc.data().task);
-    if (newTaskName && newTaskName !== doc.data().task) {
-        const taskRef = doc(db, "tasks", doc.id);
-        await updateDoc(taskRef, { task: newTaskName });
-        alert("تم التعديل بنجاح!");
-    }
-};
-
-li.appendChild(taskText);
-    
+  
 // ميزة البحث - إضافة الزميلة الثالثة
 window.searchTasks = function() {
     let input = document.getElementById('searchInput').value.toLowerCase();
@@ -122,6 +105,28 @@ window.searchTasks = function() {
         item.style.display = text.includes(input) ? 'flex' : 'none';
     });
 };    
+
+    // دالة التعديل بأسلوب نافذة التأكيد - عمل فلة الشتاء
+window.updateTask = async function() {
+    // 1. إظهار رسالة تأكيد مثل الحذف تماماً
+    const confirmation = confirm("هل تريد تعديل هذه المهمة من السحابة؟");
+   
+    if (confirmation) {
+        const taskName = document.getElementById('taskInput').value;
+        const studentName = document.getElementById('studentInput').value;
+
+        if (taskName === "" || studentName === "") {
+            alert("يرجى كتابة الاسم الجديد في الخانات فوق أولاً");
+            return;
+        }
+
+        // هنا تضع فلة كود التحديث الفعلي في Firebase
+        alert("تم البدء في التعديل سحابياً...");
+    } else {
+        // إذا ضغطتِ Cancel لا يحدث شيء
+        console.log("تم إلغاء التعديل");
+    }
+};
 
 
 
